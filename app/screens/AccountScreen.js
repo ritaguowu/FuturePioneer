@@ -11,7 +11,7 @@ import Icon from "../components/Icon";
 import EnrollListItem from "../components/EnrollListItem";
 import ListItem from "../components/ListItem";
 import Screen from "../components/Screen";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
 import useAuth from "../auth/useAuth";
@@ -28,6 +28,14 @@ const menuItems = [
     targetScreen: "MyCourseList",
   },
   {
+    title: "My Ratings",
+    icon: {
+      name: "credit-card-edit-outline",
+      backgroundColor: colors.green,
+    },
+    targetScreen: "MyCommentsList",
+  },
+  {
     title: "My Messages",
     icon: {
       name: "email",
@@ -36,12 +44,12 @@ const menuItems = [
     targetScreen: routes.MESSAGES,
   },
   {
-    title: "My Ratings",
+    title: "Send Notification",
     icon: {
-      name: "credit-card-edit-outline",
-      backgroundColor: colors.green,
+      name: "broadcast",
+      backgroundColor: colors.secondary,
     },
-    targetScreen: "MyCommentsList",
+    targetScreen: routes.SENDNOTIS,
   },
 ];
 

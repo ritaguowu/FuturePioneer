@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AccountScreen from "../screens/AccountScreen";
 import MyCourseListScreen from "../screens/MyCourseListScreen";
 import NewsScreen from "../screens/NewsScreen";
+
 // import MessagesScreen from "../screens/MessagesScreen";
 
 //Deprecated file
