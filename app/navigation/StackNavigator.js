@@ -22,6 +22,8 @@ import MessagesScreen from "../screens/MessagesScreen";
 import MyCommentsListScreen from "../screens/MyCommentsListScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import SendNotificationScreen from "../screens/SendNotificationScreen";
+import CommentsListScreen from "../screens/CommentsListScreen";
+import CommentsScreen from "../screens/CommentsScreen";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -81,6 +83,8 @@ const StackNavigator = () => {
             <Stack.Screen name="News" component={NewsScreen} />
             <Stack.Screen name="Course" component={CoursesScreen} />
             <Stack.Screen name="Messages" component={MessagesScreen} />
+            <Stack.Screen name="Comments" component={CommentsScreen} />
+            <Stack.Screen name="CommentsList" component={CommentsListScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
             <Stack.Screen
               name="CourseListNavigator"

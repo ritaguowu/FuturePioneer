@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
+  Icon
 } from "react-native";
 import AppImage from "../components/AppImage";
 import colors from "../config/colors";
@@ -55,7 +56,7 @@ function CourseDetailScreen({ route, navigation }) {
     if (result.ok) {
       if (result.data) {
         const enrollsList = result.data.filter(
-          (enroll) => list.id == enroll.courseId
+          (enroll) => list.id === enroll.courseId
         );
         setEnrollsList(enrollsList);
       }
@@ -169,7 +170,7 @@ function CourseDetailScreen({ route, navigation }) {
                 <FlatList
                   horizontal={false}
                   scrollEnabled={false}
-                  data={listings}
+                  data={listings.filter((comment)=>comment.courseId == list.id)}
                   keyExtractor={(listings) => listings.id.toString()}
                   renderItem={({ item }) => (
                     <CommentCard
@@ -263,6 +264,19 @@ const styles = StyleSheet.create({
   comments_list: {
     width: "100%",
   },
+  comments_float_icon:{
+      borderWidth: 1,
+      borderColor: 'rgba(0,0,0,0.2)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 70,
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
+      height: 70,
+      backgroundColor: '#fff',
+      borderRadius: 100
+  }
 });
 
 export default CourseDetailScreen;

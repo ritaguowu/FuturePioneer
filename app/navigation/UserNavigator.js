@@ -5,12 +5,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import NewsScreen from "../screens/NewsScreen";
 import AccountScreen from "../screens/AccountScreen";
-import MessagesScreen from "../screens/MessagesScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import CommentsListScreen from "../screens/CommentsListScreen";
 
 // const user = () => {
 //   const authContext = useContext(AuthContext);
@@ -109,8 +109,8 @@ const UserNavigator = () => {
       />
 
       <Tab.Screen
-        name="Messages"
-        component={MessagesScreen}
+        name="CommentsList"
+        component={CommentsListScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons

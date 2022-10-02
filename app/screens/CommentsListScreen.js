@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, RefreshControl, FlatList } from "react-native";
+import { StyleSheet, View, Icon, RefreshControl, FlatList, TouchableOpacity } from "react-native";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
 import CommentCard from "../components/CommentCard";
@@ -10,6 +10,7 @@ import ActivityIndicator from "../components/ActivityIndicator";
 import useApi from "../hooks/useApi";
 import { COURSES, LEVELS } from "../utility/constants";
 import userApi from "../api/users";
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 //Deprecated file
 function CommentsListScreen({ navigation }) {
@@ -42,9 +43,17 @@ function CommentsListScreen({ navigation }) {
   //   getListingsApi.request();
   // }, []);
 
+  const onRefresh = React.useCallback(() => {
+    loadingUsers();
+    loadListings();
+  });
+
+
+  console.log(listings);
+
   return (
     <>
-      {/* <Screen style={styles.screen}> */}
+      <Screen style={styles.screen}>
       {error && (
         <>
           <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -78,10 +87,16 @@ function CommentsListScreen({ navigation }) {
           />
         )}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={loadListings} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       ></FlatList>
-      {/* </Screen> */}
+        <TouchableOpacity style={styles.comments_float_icon}
+          onPress={() => {
+            navigation.navigate("Comments");
+          }}>
+          <MaterialCommunityIcons name="comment-edit-outline" size={24} color="blue" />
+        </TouchableOpacity>
+      </Screen>
     </>
   );
 }
@@ -89,6 +104,19 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.darkwhite,
   },
+  comments_float_icon:{
+    borderWidth: 1,
+      borderColor: 'rgba(0,0,0,0.2)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 50,
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
+      height: 50,
+      backgroundColor: '#fff',
+      borderRadius: 100,
+  }
 });
 
 export default CommentsListScreen;

@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
+import {GiftedChat, Bubble, Send} from 'react-native-gifted-chat';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import Screen from "../components/Screen";
 import {
@@ -28,40 +31,59 @@ function MessagesScreen(props) {
   const [messages, setMessages] = useState(initialMessages);
   const [refreshing, setRefreshing] = useState(false);
 
+  useEffect(() => {
+    setMessages([
+      {
+        _id: 1,
+        text: 'Hello developer',
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
+        },
+      },
+    ])
+  }, [])
+
+  const onSend = useCallback((messages = []) => {
+    setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
+  }, [])
+
   const handleDelete = (message) => {
     // Delete the message from messages
     setMessages(messages.filter((m) => m.id !== message.id));
   };
 
+  const renderSend = (props) => {
+    return (
+      <Send {... props}>
+        <View>
+          <MaterialCommunityIcons name="send-circle" size={32} style ={{marginBottom: 5, marginRight: 5}} color='#2e64e5'/>
+        </View>
+      </Send>
+    )
+  }
+
+  const scrollToBottomComponent = () =>{
+    return(
+      <FontAwesome name='angle-double-down' size={22} color='#333' />
+    )
+  } 
+
   return (
     <Screen>
-      <FlatList
-        data={messages}
-        keyExtractor={(message) => message.id.toString()}
-        renderItem={({ item }) => (
-          <ListItem
-            title={item.title}
-            subTitle={item.description}
-            image={item.image}
-            onPress={() => console.log("Message selected", item)}
-            renderRightActions={() => (
-              <ListItemDeleteAction onPress={() => handleDelete(item)} />
-            )}
-          />
-        )}
-        ItemSeparatorComponent={ListItemSeparator}
-        refreshing={refreshing}
-        onRefresh={() => {
-          setMessages([
-            {
-              id: 2,
-              title: "T2",
-              description: "D2",
-              image: require("../assets/user1.png"),
-            },
-          ]);
-        }}
-      />
+      <GiftedChat
+      messages={messages}
+      onSend={messages => onSend(messages)}
+      user={{
+        _id: 1,
+      }}
+      alwaysShowSend
+      renderSend={renderSend}
+      scrollToBottom
+      scrollToBottomComponent={scrollToBottomComponent}
+    />
     </Screen>
   );
 }

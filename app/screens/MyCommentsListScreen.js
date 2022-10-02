@@ -13,7 +13,13 @@ import userApi from "../api/users";
 
 function MyCommentsListScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
+  const [usersList, setUsersList] = useState();
   const { user } = useAuth();
+
+  useEffect(() => {
+    loadingUsers();
+    loadListings();
+  }, []);
 
   const {
     data: listings,
@@ -22,11 +28,17 @@ function MyCommentsListScreen({ navigation }) {
     request: loadListings,
   } = useApi(listingsApi.getListings);
 
-  useEffect(() => {
-    loadListings();
-  }, []);
+  const loadingUsers = async () => {
+    const result = await userApi.getUsers();
+    if (result.ok) {
+      if (result.data) {
+        setUsersList(result.data);
+      }
+    }
+  };
 
   const myListings = listings.filter((list) => list.userId == user.userId);
+
   // const getListingsApi = useApi(listingsApi.getListings);
 
   // useEffect(()=>{
@@ -62,7 +74,9 @@ function MyCommentsListScreen({ navigation }) {
               thumbanilUrl={
                 item.images && item.images[0] && item.images[0].thumbanilUrl
               }
-              userImageUrl={item.images && item.images[0] && item.images[0].url}
+              userImageUrl={
+                usersList.filter((u) => item.userId == u.id)[0].image.url
+              }
             />
           )}
           refreshControl={
