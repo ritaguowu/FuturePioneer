@@ -32,7 +32,7 @@ export const addEnroll = (enroll, userImageUrl, price, onUploadProgress) => {
   const imageArray = [imageObject];
   data.append("images", imageArray);
 
-  console.log("userImageUrl:", userImageUrl);
+  // console.log("userImageUrl:", userImageUrl);
   // enroll.images.forEach((image, index) =>
   //   data.append("images", {
   //     name: "image" + index,

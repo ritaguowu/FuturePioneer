@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import {
   StyleSheet,
   View,
@@ -11,7 +11,7 @@ import Icon from "../components/Icon";
 import EnrollListItem from "../components/EnrollListItem";
 import ListItem from "../components/ListItem";
 import Screen from "../components/Screen";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
 import useAuth from "../auth/useAuth";
@@ -28,6 +28,14 @@ const menuItems = [
     targetScreen: "MyCourseList",
   },
   {
+    title: "My Ratings",
+    icon: {
+      name: "credit-card-edit-outline",
+      backgroundColor: colors.green,
+    },
+    targetScreen: "MyCommentsList",
+  },
+  {
     title: "My Messages",
     icon: {
       name: "email",
@@ -36,22 +44,25 @@ const menuItems = [
     targetScreen: routes.MESSAGES,
   },
   {
-    title: "My Ratings",
+    title: "Send Notification",
     icon: {
-      name: "credit-card-edit-outline",
-      backgroundColor: colors.green,
+      name: "broadcast",
+      backgroundColor: colors.secondary,
     },
-    targetScreen: "MyCommentsList",
+    targetScreen: routes.SENDNOTIS,
   },
 ];
 
 function AccountScreen({ navigation }) {
   const { user, logOut } = useAuth();
   const [userImageUrl, setUserImageUrl] = useState();
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   useEffect(() => {
     requestPermission();
+    loadingUsers();
   }, []);
+
 
   const loadingUsers = async () => {
     const result = await userApi.getUsers();
@@ -64,7 +75,7 @@ function AccountScreen({ navigation }) {
     }
   };
 
-  loadingUsers();
+  
   const selectImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync();
@@ -118,7 +129,8 @@ function AccountScreen({ navigation }) {
                   backgroundColor={item.icon.backgroundColor}
                 />
               }
-              onPress={() => navigation.navigate(item.targetScreen)}
+              onPress={() => {
+                navigation.push(item.targetScreen, addModalOpen)}}
             />
           )}
         />

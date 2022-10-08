@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect,useContext} from "react";
 import { StyleSheet } from "react-native";
 import * as Yup from "yup";
 
@@ -15,6 +15,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import useLocation from "../hooks/useLocation";
 import listingsApi from "../api/listings";
 import UploadScreen from "./UploadScreen";
+
+import CommentContext from "../hooks/commentContext";
 
 const validationSchema = Yup.object().shape({
   description: Yup.string().min(3).label("Description"),
@@ -46,12 +48,20 @@ const levels = [
   { label: "Level 4", value: 4, backgroundColor: "black", icon: "apps" },
 ];
 
-function CommentsScreen() {
+function CommentsScreen({navigation}) {
   const location = useLocation();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const { user } = useAuth();
-  const userName = user.name;
+  const {comments, setComments} = useContext(CommentContext);
+  // const userName = user.name;
+
+  const {
+    data: listings,
+    error,
+    loading,
+    request: loadListings,
+  } = useApi(()=>listingsApi.getListings(setComments));
 
   const handleSubmit = async (listing, { resetForm }) => {
     setProgress(0);
@@ -66,9 +76,13 @@ function CommentsScreen() {
       return alert("Could not save the listing.");
     }
 
+    // navigation.goBack();
+    // navigation.navigate("CommentsList");
+    loadListings();
     resetForm();
     // alert("Success");
   };
+
 
   return (
     <Screen style={styles.container}>

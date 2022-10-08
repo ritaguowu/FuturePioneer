@@ -1,3 +1,4 @@
+import { defineLocale } from "moment";
 import { useState } from "react";
 
 export default useApi = (apiFunc) => {
@@ -6,13 +7,17 @@ export default useApi = (apiFunc) => {
   const [loading, setLoading] = useState(false);
 
   const request = async (...args) => {
-    setLoading(true);
-    const response = await apiFunc(...args);
-    setLoading(false);
+      setLoading(true);
+      const response = await apiFunc(...args);
+      setLoading(false);
 
-    setError(!response.ok);
-    setData(response.data);
-    return response;
+      if (response){
+        setError(!response.ok);
+        setData(response.data);
+      }
+      
+      return response;
+    
   };
 
   return { data, error, loading, request };

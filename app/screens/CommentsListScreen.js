@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, RefreshControl, FlatList } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, View, Icon, RefreshControl, FlatList, TouchableOpacity } from "react-native";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
 import CommentCard from "../components/CommentCard";
@@ -10,23 +10,38 @@ import ActivityIndicator from "../components/ActivityIndicator";
 import useApi from "../hooks/useApi";
 import { COURSES, LEVELS } from "../utility/constants";
 import userApi from "../api/users";
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import CommentContext from "../hooks/commentContext";
 
-//Deprecated file
+
 function CommentsListScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
-  const [usersList, setUsersList] = useState();
+  const [usersList, setUsersList] = useState([]);
+  const {comments, setComments} = useContext(CommentContext);
 
   const {
     data: listings,
     error,
     loading,
     request: loadListings,
-  } = useApi(listingsApi.getListings);
+  } = useApi(()=>listingsApi.getListings(setComments));
+
+  // comments = useApi(listingsApi.getListings);
 
   useEffect(() => {
     loadingUsers();
     loadListings();
-  }, []);
+  },[]);
+
+
+  // const loadListings = async () => {
+  //   const result = await listingsApi.getListings();
+  //   if (result.ok) {
+  //     if (result.data) {
+  //       setComments(result.data);
+  //     }
+  //   }
+  // };
 
   const loadingUsers = async () => {
     const result = await userApi.getUsers();
@@ -36,16 +51,24 @@ function CommentsListScreen({ navigation }) {
       }
     }
   };
-  // const getListingsApi = useApi(listingsApi.getListings);
 
+  
   // useEffect(()=>{
   //   getListingsApi.request();
   // }, []);
 
+  const onRefresh = React.useCallback(() => {
+    loadingUsers();
+    loadListings();
+  });
+
+  
+  // console.log(listings);
+
   return (
     <>
-      {/* <Screen style={styles.screen}> */}
-      {error && (
+      <Screen style={styles.screen}>
+      {false && (
         <>
           <View style={{ justifyContent: "center", alignItems: "center" }}>
             <AppDetailText>Couldn't retrieve the listings!</AppDetailText>
@@ -53,11 +76,11 @@ function CommentsListScreen({ navigation }) {
           </View>
         </>
       )}
-      <ActivityIndicator visible={loading} />
+      {/* <ActivityIndicator visible={loading} /> */}
       <FlatList
         nestedScrollEnabled={true}
-        data={listings}
-        keyExtractor={(listings) => listings.id.toString()}
+        data={comments}
+        keyExtractor={(comments) => comments.id.toString()}
         renderItem={({ item }) => (
           <CommentCard
             course={COURSES.filter((course) => course.id == item.courseId).map(
@@ -73,15 +96,21 @@ function CommentsListScreen({ navigation }) {
             }
             userName={item.userName}
             userImageUrl={
-              usersList.filter((u) => item.userId == u.id)[0].image.url
+              usersList.filter((u) => item.userId == u.id)[0]?.image?.url
             }
           />
         )}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={loadListings} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       ></FlatList>
-      {/* </Screen> */}
+        <TouchableOpacity style={styles.comments_float_icon}
+          onPress={() => {
+            navigation.navigate("Comments");
+          }}>
+          <MaterialCommunityIcons name="comment-edit-outline" size={24} color="blue" />
+        </TouchableOpacity>
+      </Screen>
     </>
   );
 }
@@ -89,6 +118,19 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.darkwhite,
   },
+  comments_float_icon:{
+    borderWidth: 1,
+      borderColor: 'rgba(0,0,0,0.2)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 50,
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
+      height: 50,
+      backgroundColor: '#fff',
+      borderRadius: 100,
+  }
 });
 
 export default CommentsListScreen;

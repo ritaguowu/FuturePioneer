@@ -1,11 +1,14 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { View, Text, StyleSheet, Button, Platform } from "react-native";
+import Screen from "../components/Screen";
 
 function NotificationScreen(props) {
   return (
-    <View style={styles.container}>
-      <Text>dsadf</Text>
-    </View>
+    <Screen>
+      <View>
+        <Text>NotificationScreen</Text>
+      </View>
+    </Screen>
   );
 }
 const styles = StyleSheet.create({

@@ -5,4 +5,5 @@ export default Object.freeze({
   COURSES: "Courses",
   REGISTER: "Register",
   MESSAGES: "Messages",
+  SENDNOTIS: "SendNotification",
 });

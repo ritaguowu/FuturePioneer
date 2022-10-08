@@ -40,7 +40,7 @@ function AppPicker({
     courseChoosed();
   }, [selectedItem]);
 
-  console.log(selectedItem?.label);
+  // console.log(selectedItem?.label);
 
   return (
     <React.Fragment>

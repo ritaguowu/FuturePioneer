@@ -2,7 +2,11 @@ import client from "./client";
 
 const endpoint = "/listings";
 
-const getListings = () => client.get(endpoint);
+const getListings = (callback) => {
+  client.get(endpoint)
+    .then(response =>callback(response.data))
+    .catch(err => console.log(err));
+  }
 
 export const addListing = (listing, onUploadProgress) => {
   const data = new FormData();
