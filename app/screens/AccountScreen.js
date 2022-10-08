@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import {
   StyleSheet,
   View,
@@ -56,10 +56,13 @@ const menuItems = [
 function AccountScreen({ navigation }) {
   const { user, logOut } = useAuth();
   const [userImageUrl, setUserImageUrl] = useState();
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   useEffect(() => {
     requestPermission();
+    loadingUsers();
   }, []);
+
 
   const loadingUsers = async () => {
     const result = await userApi.getUsers();
@@ -72,7 +75,7 @@ function AccountScreen({ navigation }) {
     }
   };
 
-  loadingUsers();
+  
   const selectImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync();
@@ -126,7 +129,8 @@ function AccountScreen({ navigation }) {
                   backgroundColor={item.icon.backgroundColor}
                 />
               }
-              onPress={() => navigation.navigate(item.targetScreen)}
+              onPress={() => {
+                navigation.push(item.targetScreen, addModalOpen)}}
             />
           )}
         />

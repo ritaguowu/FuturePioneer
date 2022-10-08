@@ -56,7 +56,7 @@ function EnrollScreen({ route, navigation }) {
     );
   }, [courseName]);
 
-  console.log(user.userId, user.email);
+  // console.log(user.userId, user.email);
   useEffect(() => {
     loadingUsers();
   }, []);

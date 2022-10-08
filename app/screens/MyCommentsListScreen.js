@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+// import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, View, Text, RefreshControl, FlatList } from "react-native";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
@@ -10,23 +11,37 @@ import ActivityIndicator from "../components/ActivityIndicator";
 import useApi from "../hooks/useApi";
 import { COURSES, LEVELS } from "../utility/constants";
 import userApi from "../api/users";
+import CommentContext from "../hooks/commentContext";
 
-function MyCommentsListScreen({ navigation }) {
+
+function MyCommentsListScreen({navigation}) {
   const [refreshing, setRefreshing] = useState(false);
-  const [usersList, setUsersList] = useState();
+  const [usersList, setUsersList] = useState([]);
   const { user } = useAuth();
+  const {comments, setComments} = useContext(CommentContext);
 
   useEffect(() => {
     loadingUsers();
     loadListings();
   }, []);
 
+  //Example of useFocusEffect
+
+  // useFocusEffect(
+  //   React.useCallback( () => {
+  //     console.log("Focused");
+  //     return () => {
+  //       console.log("Lost focuse!");
+  //       loadListings();}
+  //   }, [])
+  // );
+
   const {
     data: listings,
     error,
     loading,
     request: loadListings,
-  } = useApi(listingsApi.getListings);
+  } = useApi(()=>listingsApi.getListings(setComments));
 
   const loadingUsers = async () => {
     const result = await userApi.getUsers();
@@ -37,7 +52,7 @@ function MyCommentsListScreen({ navigation }) {
     }
   };
 
-  const myListings = listings.filter((list) => list.userId == user.userId);
+  const myListings = comments.filter((list) => list.userId == user.userId);
 
   // const getListingsApi = useApi(listingsApi.getListings);
 
@@ -75,7 +90,7 @@ function MyCommentsListScreen({ navigation }) {
                 item.images && item.images[0] && item.images[0].thumbanilUrl
               }
               userImageUrl={
-                usersList.filter((u) => item.userId == u.id)[0].image.url
+                usersList.filter((u) => item.userId == u.id)[0]?.image?.url
               }
             />
           )}

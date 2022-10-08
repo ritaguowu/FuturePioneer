@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, View, Icon, RefreshControl, FlatList, TouchableOpacity } from "react-native";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
@@ -11,23 +11,37 @@ import useApi from "../hooks/useApi";
 import { COURSES, LEVELS } from "../utility/constants";
 import userApi from "../api/users";
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import CommentContext from "../hooks/commentContext";
 
-//Deprecated file
+
 function CommentsListScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
-  const [usersList, setUsersList] = useState();
+  const [usersList, setUsersList] = useState([]);
+  const {comments, setComments} = useContext(CommentContext);
 
   const {
     data: listings,
     error,
     loading,
     request: loadListings,
-  } = useApi(listingsApi.getListings);
+  } = useApi(()=>listingsApi.getListings(setComments));
+
+  // comments = useApi(listingsApi.getListings);
 
   useEffect(() => {
     loadingUsers();
     loadListings();
-  }, []);
+  },[]);
+
+
+  // const loadListings = async () => {
+  //   const result = await listingsApi.getListings();
+  //   if (result.ok) {
+  //     if (result.data) {
+  //       setComments(result.data);
+  //     }
+  //   }
+  // };
 
   const loadingUsers = async () => {
     const result = await userApi.getUsers();
@@ -37,8 +51,8 @@ function CommentsListScreen({ navigation }) {
       }
     }
   };
-  // const getListingsApi = useApi(listingsApi.getListings);
 
+  
   // useEffect(()=>{
   //   getListingsApi.request();
   // }, []);
@@ -48,13 +62,13 @@ function CommentsListScreen({ navigation }) {
     loadListings();
   });
 
-
-  console.log(listings);
+  
+  // console.log(listings);
 
   return (
     <>
       <Screen style={styles.screen}>
-      {error && (
+      {false && (
         <>
           <View style={{ justifyContent: "center", alignItems: "center" }}>
             <AppDetailText>Couldn't retrieve the listings!</AppDetailText>
@@ -62,11 +76,11 @@ function CommentsListScreen({ navigation }) {
           </View>
         </>
       )}
-      <ActivityIndicator visible={loading} />
+      {/* <ActivityIndicator visible={loading} /> */}
       <FlatList
         nestedScrollEnabled={true}
-        data={listings}
-        keyExtractor={(listings) => listings.id.toString()}
+        data={comments}
+        keyExtractor={(comments) => comments.id.toString()}
         renderItem={({ item }) => (
           <CommentCard
             course={COURSES.filter((course) => course.id == item.courseId).map(
@@ -82,7 +96,7 @@ function CommentsListScreen({ navigation }) {
             }
             userName={item.userName}
             userImageUrl={
-              usersList.filter((u) => item.userId == u.id)[0].image.url
+              usersList.filter((u) => item.userId == u.id)[0]?.image?.url
             }
           />
         )}

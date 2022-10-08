@@ -25,6 +25,8 @@ import SendNotificationScreen from "../screens/SendNotificationScreen";
 import CommentsListScreen from "../screens/CommentsListScreen";
 import CommentsScreen from "../screens/CommentsScreen";
 
+import { CommentProvider } from "../hooks/commentContext";
+
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
   const [user, setUser] = useState();
@@ -43,6 +45,7 @@ const StackNavigator = () => {
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       <CourseContext.Provider value={{ courseName, setCourseName }}>
+        <CommentProvider>
         <OfflineNotice />
         <Stack.Navigator
           screenOptions={{ headerShown: false, presentation: "modal" }}
@@ -96,6 +99,7 @@ const StackNavigator = () => {
             />
           </Stack.Group>
         </Stack.Navigator>
+        </CommentProvider>
       </CourseContext.Provider>
     </AuthContext.Provider>
   );
